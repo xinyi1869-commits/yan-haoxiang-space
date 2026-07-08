@@ -1,0 +1,528 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>严浩翔的个人空间</title>
+  <style>
+    :root {
+      --red: #a4000c;
+      --red-deep: #460004;
+      --black: #050505;
+      --panel: #090909;
+      --line: rgba(255, 44, 44, .45);
+      --text: #f7f0ed;
+      --muted: #b9a8a8;
+      --hot: #ff2b2b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(255, 45, 45, .38), transparent 24rem),
+        radial-gradient(circle at 82% 22%, rgba(20, 0, 0, .88), transparent 28rem),
+        linear-gradient(135deg, var(--red), var(--red-deep) 52%, #120000);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, .026) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mix-blend-mode: overlay;
+      opacity: .42;
+    }
+
+    .page {
+      width: min(1440px, 94vw);
+      margin: 0 auto;
+      padding: 46px 0 54px;
+      position: relative;
+    }
+
+    .title {
+      text-align: center;
+      margin: 0 0 34px;
+      letter-spacing: .12em;
+      font-size: clamp(36px, 5.4vw, 82px);
+      line-height: 1;
+      font-weight: 900;
+      text-shadow:
+        0 0 16px rgba(255, 29, 29, .9),
+        0 0 44px rgba(0, 0, 0, .8);
+    }
+
+    .subtitle {
+      text-align: center;
+      margin: -18px 0 34px;
+      color: rgba(255, 230, 230, .72);
+      font-size: 14px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 24px;
+    }
+
+    .panel {
+      min-height: 470px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(255, 0, 0, .08), transparent 34%),
+        repeating-linear-gradient(-35deg, rgba(255, 255, 255, .028) 0 1px, transparent 1px 14px),
+        var(--panel);
+      box-shadow:
+        0 24px 70px rgba(0, 0, 0, .56),
+        inset 0 0 0 1px rgba(255, 255, 255, .035);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--hot), transparent);
+      opacity: .8;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: .08em;
+    }
+
+    .tag {
+      flex: 0 0 auto;
+      color: var(--hot);
+      border: 1px solid rgba(255, 43, 43, .55);
+      padding: 6px 10px;
+      font-size: 12px;
+      letter-spacing: .12em;
+      background: rgba(255, 0, 0, .08);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-link,
+    .photo-link,
+    .video-link {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+
+    .card-link:focus-visible,
+    .photo-link:focus-visible,
+    .video-link:focus-visible {
+      outline: 2px solid var(--hot);
+      outline-offset: 4px;
+    }
+
+    .shot {
+      border: 1px solid rgba(255, 255, 255, .12);
+      background: #111;
+      box-shadow: 0 18px 32px rgba(0, 0, 0, .45);
+      min-height: 332px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+
+    .card-link:hover .shot {
+      transform: translateY(-4px);
+      border-color: rgba(255, 43, 43, .55);
+      box-shadow: 0 22px 42px rgba(0, 0, 0, .58), 0 0 22px rgba(255, 43, 43, .16);
+    }
+
+    .shot-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      height: 30px;
+      padding: 0 10px;
+      background: #181818;
+      border-bottom: 1px solid rgba(255, 255, 255, .08);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--hot);
+      box-shadow: 0 0 12px var(--hot);
+    }
+
+    .shot-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .04em;
+    }
+
+    .copy {
+      margin: 0;
+      color: #fff;
+      font-size: 15px;
+      line-height: 1.58;
+    }
+
+    .thumb {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      border: 1px solid rgba(255, 255, 255, .12);
+      filter: contrast(1.08) saturate(.92);
+      background: #050505;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .photo {
+      min-height: 360px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: #000;
+      cursor: pointer;
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+
+    .photo-link:hover .photo {
+      transform: translateY(-4px);
+      border-color: rgba(255, 43, 43, .55);
+      box-shadow: 0 20px 38px rgba(0, 0, 0, .52), 0 0 22px rgba(255, 43, 43, .14);
+    }
+
+    .photo img,
+    .video-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.08) saturate(.9) brightness(.82);
+      transition: transform .4s ease, filter .4s ease;
+    }
+
+    .photo:hover img,
+    .video-card:hover img {
+      transform: scale(1.045);
+      filter: contrast(1.18) saturate(1.02) brightness(.95);
+    }
+
+    .caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 34px 12px 12px;
+      color: #fff;
+      font-weight: 700;
+      background: linear-gradient(transparent, rgba(0, 0, 0, .88));
+      text-shadow: 0 2px 8px rgba(0, 0, 0, .8);
+    }
+
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .video-card {
+      min-height: 332px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, .14);
+      background: #000;
+      cursor: pointer;
+      transition: transform .28s ease, border-color .28s ease, box-shadow .28s ease;
+    }
+
+    .video-link:hover .video-card {
+      transform: translateY(-4px);
+      border-color: rgba(255, 43, 43, .55);
+      box-shadow: 0 20px 38px rgba(0, 0, 0, .52), 0 0 22px rgba(255, 43, 43, .14);
+    }
+
+    .play {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle, rgba(255, 0, 0, .2), transparent 34%),
+        linear-gradient(180deg, rgba(0, 0, 0, .12), rgba(0, 0, 0, .78));
+    }
+
+    .play span {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, .75);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 30px;
+      text-indent: 5px;
+      background: rgba(255, 0, 0, .16);
+      box-shadow: 0 0 30px rgba(255, 43, 43, .65);
+    }
+
+    .video-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 70px 16px 16px;
+      background: linear-gradient(transparent, rgba(0, 0, 0, .93));
+    }
+
+    .video-title strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 18px;
+    }
+
+    .video-title small {
+      color: var(--muted);
+    }
+
+    .summary {
+      margin-top: 14px;
+      color: rgba(255, 240, 240, .72);
+      font-size: 13px;
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    @media (max-width: 980px) {
+      .grid,
+      .cards,
+      .video-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .panel {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .page {
+        width: min(100% - 24px, 1440px);
+        padding-top: 34px;
+      }
+
+      .panel {
+        padding: 16px;
+      }
+
+      .panel-head {
+        display: block;
+      }
+
+      .tag {
+        display: inline-block;
+        margin-top: 10px;
+      }
+
+      .photo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1 class="title">严浩翔的个人空间</h1>
+    <p class="subtitle">Weibo profile visual archive · updated 2026.07.08</p>
+
+    <section class="grid" aria-label="微博主页内容摘要">
+      <article class="panel">
+        <div class="panel-head">
+          <h2>置顶截图</h2>
+          <span class="tag">Pinned × 2</span>
+        </div>
+        <div class="cards">
+          <a class="card-link" href="https://weibo.com/u/7191533806" target="_blank" rel="noopener noreferrer" aria-label="打开置顶微博一">
+            <div class="shot">
+              <div class="shot-bar"><span class="dot"></span><span class="meta">TOP / Weibo Screenshot</span></div>
+              <div class="shot-body">
+                <p class="meta">置顶内容 01</p>
+                <p class="copy">主页最上方的固定内容，以舞台、个人影像和活动信息为核心，整体呈现冷调、锋利、强视觉记忆点。</p>
+                <img class="thumb" src="https://wx2.sinaimg.cn/orj360/007QGWsKgy1icsig1p0h5j34tm4tmu14.jpg" alt="置顶微博截图一">
+              </div>
+            </div>
+          </a>
+          <a class="card-link" href="https://weibo.com/u/7191533806" target="_blank" rel="noopener noreferrer" aria-label="打开置顶微博二">
+            <div class="shot">
+              <div class="shot-bar"><span class="dot"></span><span class="meta">TOP / Weibo Screenshot</span></div>
+              <div class="shot-body">
+                <p class="meta">置顶内容 02</p>
+                <p class="copy">第二条置顶延续个人空间的音乐与舞台叙事，黑红视觉适合突出“暗场聚光灯”的主页气质。</p>
+                <img class="thumb" src="https://wx4.sinaimg.cn/orj480/007QGWsKly1ieq65a8i4wj31hc0u0jwp.jpg" alt="置顶微博截图二">
+              </div>
+            </div>
+          </a>
+        </div>
+        <p class="summary">摘要：置顶区像主页入口的“封面”，集中展示严浩翔近期最想让访客先看到的个人内容。</p>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>最新发布</h2>
+          <span class="tag">Latest × 2</span>
+        </div>
+        <div class="cards">
+          <a class="card-link" href="https://m.weibo.cn/detail/5318548543243780" target="_blank" rel="noopener noreferrer" aria-label="打开最新微博一">
+            <div class="shot">
+              <div class="shot-bar"><span class="dot"></span><span class="meta">NEW / Weibo Screenshot</span></div>
+              <div class="shot-body">
+                <p class="meta">2026-07-08 23:24</p>
+                <p class="copy">不用我多说了吧[并不简单]。最新动态以一句短文案配合两张黑白质感图片出现，像是把主页的悬念感直接推到最前面。</p>
+                <img class="thumb" src="https://wx4.sinaimg.cn/orj360/007QGWsKly1iewzz29f1dj31m025cx58.jpg" alt="最新微博截图一">
+              </div>
+            </div>
+          </a>
+          <a class="card-link" href="https://weibo.com/u/7191533806" target="_blank" rel="noopener noreferrer" aria-label="打开最新微博二">
+            <div class="shot">
+              <div class="shot-bar"><span class="dot"></span><span class="meta">NEW / Weibo Screenshot</span></div>
+              <div class="shot-body">
+                <p class="meta">2026-07-07 00:46</p>
+                <p class="copy">铭记历史，吾辈自强！这一条是严肃纪念向表达，和前一条的视觉物料形成冷硬、克制的内容对照。</p>
+                <img class="thumb" src="https://wx3.sinaimg.cn/orj360/007QGWsKly1iewzz45ykxj32dc35skjl.jpg" alt="最新微博截图二">
+              </div>
+            </div>
+          </a>
+        </div>
+        <p class="summary">摘要：最新发布区刷新为 7月8日深夜的新图动态和 7月7日纪念向转发，既有个人影像，也有态度表达。</p>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>相册最新</h2>
+          <span class="tag">Album × 4</span>
+        </div>
+        <div class="photo-grid">
+          <a class="photo-link" href="https://m.weibo.cn/detail/5318548543243780" target="_blank" rel="noopener noreferrer" aria-label="打开相册微博一">
+            <figure class="photo">
+              <img src="https://wx4.sinaimg.cn/orj360/007QGWsKly1iewzz29f1dj31m025cx58.jpg" alt="相册最新图片一">
+              <figcaption class="caption">7月8日新图 01</figcaption>
+            </figure>
+          </a>
+          <a class="photo-link" href="https://m.weibo.cn/detail/5318548543243780" target="_blank" rel="noopener noreferrer" aria-label="打开相册微博二">
+            <figure class="photo">
+              <img src="https://wx3.sinaimg.cn/orj360/007QGWsKly1iewzz45ykxj32dc35skjl.jpg" alt="相册最新图片二">
+              <figcaption class="caption">7月8日新图 02</figcaption>
+            </figure>
+          </a>
+          <a class="photo-link" href="https://m.weibo.cn/detail/5317374104568163" target="_blank" rel="noopener noreferrer" aria-label="打开相册微博三">
+            <figure class="photo">
+              <img src="https://wx3.sinaimg.cn/orj360/007QGWsKly1iet93cdnvgj322o340kjm.jpg" alt="相册最新图片三">
+              <figcaption class="caption">7月5日更新 03</figcaption>
+            </figure>
+          </a>
+          <a class="photo-link" href="https://weibo.com/u/7191533806" target="_blank" rel="noopener noreferrer" aria-label="打开相册微博四">
+            <figure class="photo">
+              <img src="https://wx3.sinaimg.cn/orj360/007QGWsKly1ier72n5we7j323734s7wj.jpg" alt="相册最新图片四">
+              <figcaption class="caption">7月4日更新 04</figcaption>
+            </figure>
+          </a>
+        </div>
+        <p class="summary">摘要：相册区换成最近几天公开更新的图片，黑白照片和冷色舞台图更贴合当前页面的暗黑红底风格。</p>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <h2>视频最新</h2>
+          <span class="tag">Video × 2</span>
+        </div>
+        <div class="video-grid">
+          <a class="video-link" href="https://m.weibo.cn/detail/5317374104568163" target="_blank" rel="noopener noreferrer" aria-label="打开视频微博一">
+            <div class="video-card">
+              <img src="https://wx3.sinaimg.cn/orj360/007QGWsKly1iet93cdnvgj322o340kjm.jpg" alt="视频截图一">
+              <div class="play"><span>▶</span></div>
+              <div class="video-title">
+                <strong>学点新东西</strong>
+                <small>7月5日更新 · 视频感影像卡</small>
+              </div>
+            </div>
+          </a>
+          <a class="video-link" href="https://weibo.com/u/7191533806" target="_blank" rel="noopener noreferrer" aria-label="打开视频微博二">
+            <div class="video-card">
+              <img src="https://wx4.sinaimg.cn/orj480/007QGWsKly1ieq65a8i4wj31hc0u0jwp.jpg" alt="视频截图二">
+              <div class="play"><span>▶</span></div>
+              <div class="video-title">
+                <strong>说唱巅峰对决相关</strong>
+                <small>近期舞台/节目动态 · 播放卡</small>
+              </div>
+            </div>
+          </a>
+        </div>
+        <p class="summary">摘要：视频区更新为最近公开动态里更接近视频与舞台语境的内容，保留播放按钮和压暗截图的视觉处理。</p>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
